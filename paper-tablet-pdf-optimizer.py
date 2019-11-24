@@ -11,7 +11,7 @@ def check_page_size(file_path):
         numPages = input.getNumPages()
         for i in range(numPages):
             page = input.getPage(i)
-            print(str(page.mediaBox.getUpperRight_x()) + " x " + str(page.mediaBox.getUpperRight_y() - page.mediaBox.getLowerRight_y()))
+            print(str(page.mediaBox.getUpperRight_x() - page.mediaBox.getUpperLeft_x()) + " x " + str(page.mediaBox.getUpperRight_y() - page.mediaBox.getLowerRight_y()))
              
 file_path = str(sys.argv[1])
 check_page_size(file_path)
@@ -41,26 +41,33 @@ with open(file_path, "rb") as in_f:
             pageA = input1.getPage(i)
             pageB = input2.getPage(i)
 
-            width = pageA.mediaBox.getUpperRight_x()
-            height = pageA.mediaBox.getUpperRight_y()
+            leftX = pageA.mediaBox.getUpperLeft_x()
+            rightX = pageA.mediaBox.getUpperRight_x()
 
-            #width x height
-            #lowerLeft = (0, 0)
-            #lowerRight = (width, 0)
-            #upperLeft = (0, height)
-            #upperRight = (width, height)
+            lowerY = pageA.mediaBox.getLowerRight_y()
+            upperY = pageA.mediaBox.getUpperRight_y()
+
+            # width = rightX - leftX
+            # height = upperY - lowerY
+            half_h = (lowerY + upperY) / 2
+
+            # width x height
+            # lowerLeft = (leftX, lowerY)
+            # lowerRight = (rightX, lowerY)
+            # upperLeft = (leftX, upperY)
+            # upperRight = (rightX, upperY)
 
             # Obtain first half of the page
-            pageA.mediaBox.lowerLeft = (0, height / 2)
-            pageA.mediaBox.lowerRight = (width , height / 2)
-            pageA.mediaBox.upperLeft = (0, height)
-            pageA.mediaBox.upperRight = (width, height)
+            pageA.mediaBox.lowerLeft = (leftX, half_h)
+            pageA.mediaBox.lowerRight = (rightX , half_h)
+            pageA.mediaBox.upperLeft = (leftX, upperY)
+            pageA.mediaBox.upperRight = (rightX, upperY)
             
             # Obtain second half of the page       
-            pageB.mediaBox.lowerLeft = (0, 0)
-            pageB.mediaBox.lowerRight = (width , 0)
-            pageB.mediaBox.upperLeft = (0, height / 2)
-            pageB.mediaBox.upperRight = (width, height / 2)
+            pageB.mediaBox.lowerLeft = (leftX, lowerY)
+            pageB.mediaBox.lowerRight = (rightX , lowerY)
+            pageB.mediaBox.upperLeft = (leftX, half_h)
+            pageB.mediaBox.upperRight = (rightX, half_h)
 
             # Put the splitted page in the document
             output.addPage(pageA)
