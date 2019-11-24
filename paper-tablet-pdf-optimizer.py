@@ -20,7 +20,7 @@ print("Working on " + file_path)
 
 # Crop (comment the following 4 lines in case you do not want to crop margins)
 print("Crop pages...")
-os.system("pdf-crop-margins -s -u -o " + file_path.replace(".pdf", "_cropped.pdf") + " " + file_path)
+os.system("pdf-crop-margins -s -u -o '" + file_path.replace(".pdf", "_cropped.pdf") + "' '" + file_path + "'")
 file_path = file_path.replace(".pdf", "_cropped.pdf")
 check_page_size(file_path)
 
@@ -75,7 +75,7 @@ with open(file_path, "rb") as in_f:
 
         # Delete temp file
         if file_path.endswith("_cropped.pdf"):
-            os.system("rm " + file_path)
+            os.system("rm '" + file_path + "'")
             file_path = file_path.replace("_cropped.pdf", ".pdf")        
         
         file_path = file_path.replace(".pdf", "_optimized.pdf")
